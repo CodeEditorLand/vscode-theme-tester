@@ -1,27 +1,33 @@
 {
 	"name": "theme-tester",
 	"displayName": "Theme Tester",
+	"version": "0.0.1",
+	"private": false,
 	"description": "Test a color theme without installing it",
-	"version": "1.2.1",
-	"publisher": "ms-vscode",
-	"license": "MIT",
-	"private": true,
-	"engines": {
-		"vscode": "^1.82.0"
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-theme-tester"
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
 	},
-	"bugs": {
-		"url": "https://github.com/Microsoft/vscode-theme-tester/issues"
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
 	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onFileSystem:vscode-theme-tester"
-	],
+	"type": "module",
+	"browser": "./dist/themeTesterMain.js",
+	"scripts": {
+		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
+		"compile": "webpack",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"serve": "yarn compile && serve --cors -l 5000",
+		"watch": "webpack --watch"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -31,41 +37,35 @@
 		],
 		"resourceLabelFormatters": [
 			{
-				"scheme": "vscode-theme-tester",
 				"formatting": {
 					"label": "${path}",
 					"separator": "/",
 					"tildify": true,
 					"workspaceSuffix": "Theme Tester Playground"
-				}
+				},
+				"scheme": "vscode-theme-tester"
 			}
 		]
 	},
-	"browser": "./dist/themeTesterMain.js",
-	"scripts": {
-		"compile": "webpack",
-		"watch": "webpack --watch",
-		"package": "webpack --mode production --devtool hidden-source-map",
-		"lint": "eslint src --ext ts",
-		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
-		"serve": "yarn compile && serve --cors -l 5000"
-	},
+	"activationEvents": [
+		"onFileSystem:vscode-theme-tester"
+	],
 	"devDependencies": {
 		"@types/node": "18.x",
 		"@types/vscode": "^1.82.0",
 		"@types/webpack": "^5.28.3",
-		"@typescript-eslint/eslint-plugin": "^6.7.5",
-		"@typescript-eslint/experimental-utils": "^5.62.0",
-		"@typescript-eslint/parser": "^6.7.5",
 		"@vscode/test-web": "^0.0.46",
 		"assert": "^2.1.0",
-		"eslint": "^8.51.0",
 		"process": "^0.11.10",
 		"request-light": "^0.7.0",
+		"serve": "^14.2.1",
 		"ts-loader": "^9.5.0",
 		"typescript": "^5.2.2",
+		"typescript-esbuild": "latest",
 		"webpack": "^5.88.2",
-		"webpack-cli": "^5.1.4",
-		"serve": "^14.2.1"
+		"webpack-cli": "^5.1.4"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
