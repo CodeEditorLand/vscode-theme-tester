@@ -1,34 +1,15 @@
 {
-	"name": "theme-tester",
-	"displayName": "Theme Tester",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Test a color theme without installing it",
-	"keywords": [
-		"land"
+	"activationEvents": [
+		"onFileSystem:vscode-theme-tester"
 	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandThemeTester.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "🌆 — Land —",
 		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
 		"url": "HTTPS://Land.PlayForm.Cloud"
 	},
-	"type": "module",
 	"browser": "./dist/themeTesterMain.js",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
-		"compile": "webpack",
-		"prepublishOnly": "Build 'Source/**/*.ts'",
-		"serve": "yarn compile && serve --cors -l 5000"
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester/issues"
 	},
 	"contributes": {
 		"commands": [
@@ -49,9 +30,7 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onFileSystem:vscode-theme-tester"
-	],
+	"description": "Test a color theme without installing it",
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -62,7 +41,28 @@
 		"serve": "14.2.3",
 		"ts-loader": "9.5.1"
 	},
+	"displayName": "Theme Tester",
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester#readme",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"name": "theme-tester",
+	"private": false,
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandThemeTester.git"
+	},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
+		"compile": "webpack",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"serve": "yarn compile && serve --cors -l 5000"
+	},
+	"type": "module",
+	"version": "0.0.1"
 }
