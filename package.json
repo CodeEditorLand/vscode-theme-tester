@@ -1,0 +1,68 @@
+{
+	"name": "theme-tester",
+	"displayName": "Theme Tester",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Test a color theme without installing it",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandThemeTester/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandThemeTester.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"browser": "./dist/themeTesterMain.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
+		"compile": "webpack",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"serve": "yarn compile && serve --cors -l 5000"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "vscode-theme-tester.open",
+				"title": "Theme Tester: Preview Theme"
+			}
+		],
+		"resourceLabelFormatters": [
+			{
+				"formatting": {
+					"label": "${path}",
+					"separator": "/",
+					"tildify": true,
+					"workspaceSuffix": "Theme Tester Playground"
+				},
+				"scheme": "vscode-theme-tester"
+			}
+		]
+	},
+	"activationEvents": [
+		"onFileSystem:vscode-theme-tester"
+	],
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6",
+		"@types/node": "20.x",
+		"assert": "2.1.0",
+		"process": "0.11.10",
+		"request-light": "0.7.0",
+		"serve": "14.2.3",
+		"ts-loader": "9.5.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
