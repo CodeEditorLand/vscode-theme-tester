@@ -1,10 +1,9 @@
 {
-	"name": "test-data",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
-	},
-	"devDependencies": {
-		"@playform/build": "0.0.7"
-	}
+    "name": "test-data",
+    "categories": [
+		"Other"
+	],
+    "devDependencies": {
+        "typescript": "4.4.3"
+    }
 }
