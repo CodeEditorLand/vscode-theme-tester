@@ -31,11 +31,11 @@
 		"onFileSystem:vscode-theme-tester"
 	],
 	"devDependencies": {
-		"@types/node": "18.x",
+		"@types/node": "20.x",
 		"assert": "2.1.0",
 		"process": "0.11.10",
 		"request-light": "0.7.0",
-		"serve": "14.2.1",
-		"ts-loader": "9.5.0"
+		"serve": "14.2.3",
+		"ts-loader": "9.5.1"
 	}
 }
