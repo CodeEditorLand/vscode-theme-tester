@@ -2,12 +2,26 @@
 	"name": "theme-tester",
 	"displayName": "Theme Tester",
 	"description": "Test a color theme without installing it",
-	"browser": "./dist/themeTesterMain.js",
-	"scripts": {
-		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
-		"compile": "webpack",
-		"serve": "yarn compile && serve --cors -l 5000"
+	"version": "1.2.1",
+	"publisher": "ms-vscode",
+	"license": "MIT",
+	"private": true,
+	"engines": {
+		"vscode": "^1.82.0"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-theme-tester"
+	},
+	"bugs": {
+		"url": "https://github.com/Microsoft/vscode-theme-tester/issues"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onFileSystem:vscode-theme-tester"
+	],
 	"contributes": {
 		"commands": [
 			{
@@ -17,25 +31,41 @@
 		],
 		"resourceLabelFormatters": [
 			{
+				"scheme": "vscode-theme-tester",
 				"formatting": {
 					"label": "${path}",
 					"separator": "/",
 					"tildify": true,
 					"workspaceSuffix": "Theme Tester Playground"
-				},
-				"scheme": "vscode-theme-tester"
+				}
 			}
 		]
 	},
-	"activationEvents": [
-		"onFileSystem:vscode-theme-tester"
-	],
+	"browser": "./dist/themeTesterMain.js",
+	"scripts": {
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"lint": "eslint src --ext ts",
+		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
+		"serve": "yarn compile && serve --cors -l 5000"
+	},
 	"devDependencies": {
-		"@types/node": "20.x",
+		"@types/node": "18.x",
+		"@types/vscode": "^1.82.0",
+		"@types/webpack": "^5.28.3",
+		"@typescript-eslint/eslint-plugin": "^6.7.5",
+		"@typescript-eslint/experimental-utils": "^5.62.0",
+		"@typescript-eslint/parser": "^6.7.5",
+		"@vscode/test-web": "^0.0.46",
 		"assert": "^2.1.0",
+		"eslint": "^8.51.0",
 		"process": "^0.11.10",
 		"request-light": "^0.7.0",
-		"serve": "^14.2.3",
-		"ts-loader": "^9.5.1"
+		"ts-loader": "^9.5.0",
+		"typescript": "^5.2.2",
+		"webpack": "^5.88.2",
+		"webpack-cli": "^5.1.4",
+		"serve": "^14.2.1"
 	}
 }
