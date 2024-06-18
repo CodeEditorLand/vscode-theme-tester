@@ -4,6 +4,6 @@
 		"Other"
 	],
     "devDependencies": {
-        "typescript": "4.4.3"
+        "typescript": "5.4.5"
     }
 }
