@@ -1,4 +1,9 @@
 {
-	"name": "test-data",
-	"devDependencies": {}
+    "name": "test-data",
+    "categories": [
+		"Other"
+	],
+    "devDependencies": {
+        "typescript": "5.4.5"
+    }
 }
