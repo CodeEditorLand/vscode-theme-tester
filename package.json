@@ -1,8 +1,13 @@
 {
-	"activationEvents": [
-		"onFileSystem:vscode-theme-tester"
-	],
+	"name": "theme-tester",
+	"displayName": "Theme Tester",
+	"description": "Test a color theme without installing it",
 	"browser": "./dist/themeTesterMain.js",
+	"scripts": {
+		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
+		"compile": "webpack",
+		"serve": "yarn compile && serve --cors -l 5000"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -22,7 +27,9 @@
 			}
 		]
 	},
-	"description": "Test a color theme without installing it",
+	"activationEvents": [
+		"onFileSystem:vscode-theme-tester"
+	],
 	"devDependencies": {
 		"@types/node": "22.4",
 		"assert": "2.1.0",
@@ -30,12 +37,5 @@
 		"request-light": "0.8.0",
 		"serve": "14.2.3",
 		"ts-loader": "9.5.1"
-	},
-	"displayName": "Theme Tester",
-	"name": "theme-tester",
-	"scripts": {
-		"chrome": "yarn compile && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --folder-uri=vscode-theme-tester://m/",
-		"compile": "webpack",
-		"serve": "yarn compile && serve --cors -l 5000"
 	}
 }
