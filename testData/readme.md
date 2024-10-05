@@ -1,7 +1,6 @@
-**bold text** *italicized text* ~~strike through.~~
+**bold text** _italicized text_ ~~strike through.~~
 
 > this is a block quote
-
 
 ### Ordered list
 
@@ -11,25 +10,23 @@
 
 ### Unordered list
 
-- First item
-- Second item
-- Third item
+-   First item
+-   Second item
+-   Third item
 
 ### Fenced code
 
 ```json
 {
-  "firstName": "John",
-  "lastName": "Smith",
-  "age": 25
+	"firstName": "John",
+	"lastName": "Smith",
+	"age": 25
 }
 ```
 
-
 ### Table
 
-| Syntax | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
-
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
