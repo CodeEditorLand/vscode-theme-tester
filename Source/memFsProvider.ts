@@ -3,8 +3,19 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EventEmitter, Event, Uri, FileSystemProvider, Disposable, FileType, FileStat, FileSystemError, FileChangeType, FileChangeEvent } from 'vscode';
-import { Utils } from 'vscode-uri';
+import {
+	Disposable,
+	Event,
+	EventEmitter,
+	FileChangeEvent,
+	FileChangeType,
+	FileStat,
+	FileSystemError,
+	FileSystemProvider,
+	FileType,
+	Uri,
+} from "vscode";
+import { Utils } from "vscode-uri";
 
 export interface File {
 	readonly type: FileType.File;
@@ -22,19 +33,29 @@ export interface Directory {
 
 export type Entry = File | Directory;
 
-
 function newFileStat(type: FileType, size: number): Promise<FileStat> {
-	return Promise.resolve({ type, ctime: Date.now(), mtime: Date.now(), size });
+	return Promise.resolve({
+		type,
+		ctime: Date.now(),
+		mtime: Date.now(),
+		size,
+	});
 }
 
 function modifiedFileStat(stats: FileStat, size?: number): Promise<FileStat> {
-	return Promise.resolve({ type: stats.type, ctime: stats.ctime, mtime: Date.now(), size: size ?? stats.size });
+	return Promise.resolve({
+		type: stats.type,
+		ctime: stats.ctime,
+		mtime: Date.now(),
+		size: size ?? stats.size,
+	});
 }
 
 export class MemFileSystemProvider implements FileSystemProvider {
-
-	constructor(private readonly scheme: string, private readonly root: Directory) {
-	}
+	constructor(
+		private readonly scheme: string,
+		private readonly root: Directory,
+	) {}
 
 	// --- manage file metadata
 
@@ -58,7 +79,11 @@ export class MemFileSystemProvider implements FileSystemProvider {
 		return entry.content;
 	}
 
-	async writeFile(uri: Uri, content: Uint8Array, opts: { create: boolean; overwrite: boolean }): Promise<void> {
+	async writeFile(
+		uri: Uri,
+		content: Uint8Array,
+		opts: { create: boolean; overwrite: boolean },
+	): Promise<void> {
 		const basename = Utils.basename(uri);
 		const parent = await this._lookupParentDirectory(uri);
 		const entries = await parent.entries;
@@ -74,7 +99,12 @@ export class MemFileSystemProvider implements FileSystemProvider {
 		}
 		const stats = newFileStat(FileType.File, content.byteLength);
 		if (!entry) {
-			entry = { type: FileType.File, name: basename, stats, content: Promise.resolve(content) };
+			entry = {
+				type: FileType.File,
+				name: basename,
+				stats,
+				content: Promise.resolve(content),
+			};
 			entries.set(basename, entry);
 			this._fireSoon({ type: FileChangeType.Created, uri });
 		} else {
@@ -86,8 +116,12 @@ export class MemFileSystemProvider implements FileSystemProvider {
 
 	// --- manage files/folders
 
-	async rename(from: Uri, to: Uri, opts: { overwrite: boolean }): Promise<void> {
-		if (!opts.overwrite && await this._lookup(to, true)) {
+	async rename(
+		from: Uri,
+		to: Uri,
+		opts: { overwrite: boolean },
+	): Promise<void> {
+		if (!opts.overwrite && (await this._lookup(to, true))) {
 			throw FileSystemError.FileExists(to);
 		}
 
@@ -108,7 +142,7 @@ export class MemFileSystemProvider implements FileSystemProvider {
 
 		this._fireSoon(
 			{ type: FileChangeType.Deleted, uri: from },
-			{ type: FileChangeType.Created, uri: to }
+			{ type: FileChangeType.Created, uri: to },
 		);
 	}
 
@@ -120,7 +154,10 @@ export class MemFileSystemProvider implements FileSystemProvider {
 		if (parentEntries.has(basename)) {
 			parentEntries.delete(basename);
 			parent.stats = newFileStat(parent.type, -1);
-			this._fireSoon({ type: FileChangeType.Changed, uri: dirname }, { uri, type: FileChangeType.Deleted });
+			this._fireSoon(
+				{ type: FileChangeType.Changed, uri: dirname },
+				{ uri, type: FileChangeType.Deleted },
+			);
 		}
 	}
 
@@ -130,18 +167,32 @@ export class MemFileSystemProvider implements FileSystemProvider {
 		const parent = await this._lookupAsDirectory(dirname, false);
 		const parentEntries = await parent.entries;
 
-		const entry: Directory = { type: FileType.Directory, name: basename, stats: newFileStat(FileType.Directory, 0), entries: Promise.resolve(new Map()) };
+		const entry: Directory = {
+			type: FileType.Directory,
+			name: basename,
+			stats: newFileStat(FileType.Directory, 0),
+			entries: Promise.resolve(new Map()),
+		};
 		parentEntries.set(entry.name, entry);
 		const stats = await parent.stats;
 		parent.stats = modifiedFileStat(stats, stats.size + 1);
-		this._fireSoon({ type: FileChangeType.Changed, uri: dirname }, { type: FileChangeType.Created, uri });
+		this._fireSoon(
+			{ type: FileChangeType.Changed, uri: dirname },
+			{ type: FileChangeType.Created, uri },
+		);
 	}
 
 	// --- lookup
 
 	private async _lookup(uri: Uri, silent: false): Promise<Entry>;
-	private async _lookup(uri: Uri, silent: boolean): Promise<Entry | undefined>;
-	private async _lookup(uri: Uri, silent: boolean): Promise<Entry | undefined> {
+	private async _lookup(
+		uri: Uri,
+		silent: boolean,
+	): Promise<Entry | undefined>;
+	private async _lookup(
+		uri: Uri,
+		silent: boolean,
+	): Promise<Entry | undefined> {
 		if (uri.scheme !== this.scheme) {
 			if (!silent) {
 				throw FileSystemError.FileNotFound(uri);
@@ -150,7 +201,7 @@ export class MemFileSystemProvider implements FileSystemProvider {
 			}
 		}
 		let entry: Entry | undefined = this.root;
-		const parts = uri.path.split('/');
+		const parts = uri.path.split("/");
 		for (const part of parts) {
 			if (!part) {
 				continue;
@@ -171,7 +222,10 @@ export class MemFileSystemProvider implements FileSystemProvider {
 		return entry;
 	}
 
-	private async _lookupAsDirectory(uri: Uri, silent: boolean): Promise<Directory> {
+	private async _lookupAsDirectory(
+		uri: Uri,
+		silent: boolean,
+	): Promise<Directory> {
 		const entry = await this._lookup(uri, silent);
 		if (entry?.type === FileType.Directory) {
 			return entry;
@@ -198,12 +252,16 @@ export class MemFileSystemProvider implements FileSystemProvider {
 	// --- manage file events
 
 	private readonly _onDidChangeFile = new EventEmitter<FileChangeEvent[]>();
-	readonly onDidChangeFile: Event<FileChangeEvent[]> = this._onDidChangeFile.event;
+	readonly onDidChangeFile: Event<FileChangeEvent[]> =
+		this._onDidChangeFile.event;
 
 	private _bufferedChanges: FileChangeEvent[] = [];
 	private _fireSoonHandle?: NodeJS.Timeout;
 
-	watch(resource: Uri, opts: { recursive: boolean; excludes: string[] }): Disposable {
+	watch(
+		resource: Uri,
+		opts: { recursive: boolean; excludes: string[] },
+	): Disposable {
 		// ignore, fires for all changes...
 		return Disposable.from();
 	}
