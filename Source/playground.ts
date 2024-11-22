@@ -27,6 +27,7 @@ export function registerPlayground(playgroundFolder: Uri): Disposable {
 		playgroundFolder,
 		"",
 	);
+
 	return workspace.registerFileSystemProvider(
 		SCHEME,
 		new MemFileSystemProvider(SCHEME, serverBackedRootDirectory),
@@ -42,6 +43,7 @@ class ServerBackedFile implements File {
 		size: 0,
 	});
 	private _content: Promise<Uint8Array> | undefined;
+
 	constructor(
 		private readonly _serverUri: Uri,
 		public name: string,
@@ -68,6 +70,7 @@ class ServerBackedDirectory implements Directory {
 		size: 0,
 	});
 	private _entries: Promise<Map<string, Entry>> | undefined;
+
 	constructor(
 		private readonly _serverUri: Uri,
 		public name: string,
@@ -94,11 +97,14 @@ function isDirEntry(e: any): e is [string, FileType] {
 
 async function getEntries(contentUri: Uri): Promise<Map<string, Entry>> {
 	const result = new Map();
+
 	try {
 		const dirInfo = await workspace.fs.readFile(
 			Utils.joinPath(contentUri, "dirinfo.json"),
 		);
+
 		const entries = JSON.parse(new TextDecoder().decode(dirInfo));
+
 		if (Array.isArray(entries)) {
 			for (const r of entries) {
 				if (isDirEntry(r)) {
@@ -106,7 +112,9 @@ async function getEntries(contentUri: Uri): Promise<Map<string, Entry>> {
 						r[1] === FileType.Directory
 							? FileType.Directory
 							: FileType.File;
+
 					const childContentPath = Utils.joinPath(contentUri, r[0]);
+
 					const newEntry: Entry =
 						type === FileType.Directory
 							? new ServerBackedDirectory(childContentPath, r[0])
@@ -127,11 +135,14 @@ export async function openEditors(themeSettingName: string) {
 	await commands.executeCommand("workbench.action.closeAllEditors");
 
 	const readmeURI = Uri.parse(`${SCHEME}:/readme.md`);
+
 	const helloTs = Uri.parse(`${SCHEME}:/hello.ts`);
+
 	const packageJSON = Uri.parse(`${SCHEME}:/package.json`);
 
 	// add a header
 	const doc = await workspace.openTextDocument(readmeURI);
+
 	const edit = new WorkspaceEdit();
 	edit.insert(
 		readmeURI,

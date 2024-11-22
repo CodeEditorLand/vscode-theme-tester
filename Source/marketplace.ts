@@ -18,14 +18,17 @@ export async function getLatestVersion(
 				"X-Market-Client-Id": "vscode-marketplace-extension-browser",
 			},
 		});
+
 		if (res.status === 200) {
 			const data = JSON.parse(res.responseText);
+
 			if (
 				Array.isArray(data?.results) &&
 				Array.isArray(data.results[0].extensions) &&
 				Array.isArray(data.results[0].extensions[0].versions)
 			) {
 				const versions = data.results[0].extensions[0].versions;
+
 				if (Array.isArray(versions) && versions.length) {
 					return versions[0].version;
 				}
@@ -62,11 +65,14 @@ export async function fetchPackageJSON(
 		version,
 		"/extension/package.json",
 	);
+
 	const headers = {
 		// eslint-disable-next-line @typescript-eslint/naming-convention
 		"X-Client-Name": `theme-tester`,
 	};
+
 	const res = await xhr({ url, headers });
+
 	if (res.status >= 200 && res.status <= 204) {
 		try {
 			return JSON.parse(res.responseText);

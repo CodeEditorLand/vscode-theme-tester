@@ -13,6 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
 		context.extensionUri,
 		"testData",
 	);
+
 	const playground = registerPlayground(playgroundData);
 	context.subscriptions.push(playground);
 
@@ -30,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const location = await vscode.window.showInputBox({
 			value: "azemoh.one-monokai",
 		});
+
 		if (!location) {
 			return;
 		}
@@ -52,11 +54,14 @@ async function handleUriLocation(location: string) {
 			/\/(?:theme)\/(?<publisher>[^.]+)\.(?<extensionName>[^/]+)(\/(?<themeName>.*))?$/i.exec(
 				location,
 			);
+
 		const groups = match?.groups;
+
 		if (!groups) {
 			vscode.window.showErrorMessage(
 				"Invalid URL. Must be in the form '/theme/publisher.name(/themeName)?'",
 			);
+
 			return;
 		}
 
@@ -76,12 +81,15 @@ async function handleUriLocation(location: string) {
 				return await previewTheme(publisher, extensionName, themeName);
 			},
 		);
+
 		if (res) {
 			const buttons = ["Install", "Browse More...", "Cancel"];
+
 			const action = await vscode.window.showInformationMessage(
 				`Welcome! Here's a preview of the ${res.settingsId} theme in ${getProductName()}.`,
 				...buttons,
 			);
+
 			if (action === buttons[2]) {
 				await res.undo();
 			} else if (action === buttons[1]) {
@@ -105,6 +113,7 @@ function findBuiltInExtension(
 	name: string,
 ): any | undefined {
 	const extension = vscode.extensions.getExtension(`${publisher}.${name}`);
+
 	if (extension) {
 		return extension.packageJSON;
 	}
@@ -120,18 +129,22 @@ async function previewTheme(
 
 	const manifest =
 		builtInManifest ?? (await findMarketPlaceExtension(publisher, name));
+
 	if (!manifest) {
 		vscode.window.showErrorMessage(
 			`Unable to find extension ${manifest.name} (${publisher}.${name}).`,
 		);
+
 		return undefined;
 	}
 
 	const themes: ThemeContribution[] = manifest.contributes?.themes;
+
 	if (!Array.isArray(themes) || themes.length === 0) {
 		vscode.window.showErrorMessage(
 			`Extension ${manifest.name} (${publisher}.${name}) does not contain any color themes.`,
 		);
+
 		return undefined;
 	}
 	if (vscode.env.appHost === "web" && !vscode.env.remoteName) {
@@ -139,6 +152,7 @@ async function previewTheme(
 			vscode.window.showErrorMessage(
 				`The extension ${manifest.name} (${publisher}.${name}) is not a web extension and can not be installed in ${getProductName()}. [Learn Why](https://aka.ms/vscode-web-extensions-guide).`,
 			);
+
 			return undefined;
 		}
 	} else {
@@ -146,18 +160,23 @@ async function previewTheme(
 			vscode.window.showErrorMessage(
 				`The extension ${manifest.name} (${publisher}.${name}) is a web extension and can not be installed in ${getProductName()}.`,
 			);
+
 			return undefined;
 		}
 	}
 	const getSettingsId = (theme: ThemeContribution) => theme.id || theme.label;
 
 	let settingsId: string | undefined = undefined;
+
 	if (themeName) {
 		themeName = themeName.toLowerCase();
+
 		for (const theme of themes) {
 			const currSettingsId = getSettingsId(theme);
+
 			if (currSettingsId.toLowerCase() === themeName) {
 				settingsId = currSettingsId;
+
 				break;
 			}
 		}
@@ -165,6 +184,7 @@ async function previewTheme(
 			vscode.window.showErrorMessage(
 				`Extension ${manifest.name} (${publisher}.${name}) does not contain a color theme ${themeName}.\nTry one of ${themes.map(getSettingsId).join(", ")} instead.`,
 			);
+
 			return undefined;
 		}
 	} else {
@@ -179,6 +199,7 @@ async function previewTheme(
 	const oldTheme = vscode.workspace
 		.getConfiguration()
 		.inspect<string | undefined>("workbench.colorTheme")?.globalValue;
+
 	const version = manifest.version;
 
 	await vscode.commands.executeCommand(
@@ -229,10 +250,12 @@ async function findMarketPlaceExtension(
 	name: string,
 ): Promise<any | undefined> {
 	const version = await getLatestVersion(publisher, name);
+
 	if (version === undefined) {
 		vscode.window.showErrorMessage(
 			`Unable to find extension ${publisher}.${name} on the marketplace.`,
 		);
+
 		return undefined;
 	}
 

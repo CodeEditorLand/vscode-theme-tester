@@ -5,6 +5,7 @@ export class Store {
 
 	async foo() {
 		const buffer = await fs.readFile("test.yaml", "utf-8");
+
 		return buffer.substr(0, buffer.length);
 	}
 }
