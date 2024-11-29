@@ -15,16 +15,19 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	const playground = registerPlayground(playgroundData);
+
 	context.subscriptions.push(playground);
 
 	const uriHandler = vscode.window.registerUriHandler({
 		handleUri: (uri) => {
 			if (uri.path === "/open" && uri.query) {
 				const inputURI = vscode.Uri.parse(uri.query);
+
 				handleUriLocation(inputURI.path);
 			}
 		},
 	});
+
 	context.subscriptions.push(uriHandler);
 
 	vscode.commands.registerCommand("vscode-theme-tester.open", async () => {
@@ -44,7 +47,9 @@ type ThemeContribution = { id?: string; label: string };
 
 type InstallResult = {
 	settingsId: string;
+
 	keep: () => Promise<void>;
+
 	undo: () => Promise<void>;
 };
 
@@ -75,6 +80,7 @@ async function handleUriLocation(location: string) {
 			async (
 				progress: vscode.Progress<{
 					message?: string;
+
 					increment?: number;
 				}>,
 			) => {
@@ -98,6 +104,7 @@ async function handleUriLocation(location: string) {
 				);
 			} else if (action === buttons[0]) {
 				await res.keep();
+
 				await vscode.window.showInformationMessage(
 					`The theme is now installed and configured in the user settings.`,
 				);
@@ -117,6 +124,7 @@ function findBuiltInExtension(
 	if (extension) {
 		return extension.packageJSON;
 	}
+
 	return undefined;
 }
 
@@ -147,6 +155,7 @@ async function previewTheme(
 
 		return undefined;
 	}
+
 	if (vscode.env.appHost === "web" && !vscode.env.remoteName) {
 		if (manifest.main && !manifest.browser) {
 			vscode.window.showErrorMessage(
@@ -164,6 +173,7 @@ async function previewTheme(
 			return undefined;
 		}
 	}
+
 	const getSettingsId = (theme: ThemeContribution) => theme.id || theme.label;
 
 	let settingsId: string | undefined = undefined;
@@ -180,6 +190,7 @@ async function previewTheme(
 				break;
 			}
 		}
+
 		if (!settingsId) {
 			vscode.window.showErrorMessage(
 				`Extension ${manifest.name} (${publisher}.${name}) does not contain a color theme ${themeName}.\nTry one of ${themes.map(getSettingsId).join(", ")} instead.`,
@@ -190,6 +201,7 @@ async function previewTheme(
 	} else {
 		settingsId = getSettingsId(themes[0]);
 	}
+
 	if (!settingsId) {
 		return undefined;
 	}
@@ -216,6 +228,7 @@ async function previewTheme(
 				settingsId,
 				vscode.ConfigurationTarget.Global,
 			);
+
 		await vscode.workspace
 			.getConfiguration()
 			.update(

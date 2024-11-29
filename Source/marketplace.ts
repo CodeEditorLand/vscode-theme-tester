@@ -37,17 +37,22 @@ export async function getLatestVersion(
 	} catch (e) {
 		console.log(e);
 	}
+
 	return undefined;
 }
 
 export interface Manifest {
 	browser?: string;
+
 	main?: string;
+
 	contributes?: {
 		themes?: [
 			{
 				label?: string;
+
 				path: string;
+
 				uiTheme: string;
 			},
 		];
@@ -80,6 +85,7 @@ export async function fetchPackageJSON(
 			throw new Error(`Problem parsing ${url}`);
 		}
 	}
+
 	throw new Error(`Problem accessing ${url}`);
 }
 

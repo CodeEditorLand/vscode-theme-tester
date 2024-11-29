@@ -36,26 +36,31 @@ export function registerPlayground(playgroundFolder: Uri): Disposable {
 
 class ServerBackedFile implements File {
 	readonly type = FileType.File;
+
 	readonly stats = Promise.resolve({
 		type: FileType.File,
 		ctime: Date.now(),
 		mtime: Date.now(),
 		size: 0,
 	});
+
 	private _content: Promise<Uint8Array> | undefined;
 
 	constructor(
 		private readonly _serverUri: Uri,
 		public name: string,
 	) {}
+
 	get content(): Promise<Uint8Array> {
 		if (this._content === undefined) {
 			this._content = Promise.resolve(
 				workspace.fs.readFile(this._serverUri),
 			);
 		}
+
 		return this._content;
 	}
+
 	set content(content: Promise<Uint8Array>) {
 		this._content = content;
 	}
@@ -63,24 +68,29 @@ class ServerBackedFile implements File {
 
 class ServerBackedDirectory implements Directory {
 	readonly type = FileType.Directory;
+
 	readonly stats = Promise.resolve({
 		type: FileType.Directory,
 		ctime: Date.now(),
 		mtime: Date.now(),
 		size: 0,
 	});
+
 	private _entries: Promise<Map<string, Entry>> | undefined;
 
 	constructor(
 		private readonly _serverUri: Uri,
 		public name: string,
 	) {}
+
 	get entries(): Promise<Map<string, Entry>> {
 		if (this._entries === undefined) {
 			this._entries = getEntries(this._serverUri);
 		}
+
 		return this._entries;
 	}
+
 	set entries(entries: Promise<Map<string, Entry>>) {
 		this._entries = entries;
 	}
@@ -119,15 +129,18 @@ async function getEntries(contentUri: Uri): Promise<Map<string, Entry>> {
 						type === FileType.Directory
 							? new ServerBackedDirectory(childContentPath, r[0])
 							: new ServerBackedFile(childContentPath, r[0]);
+
 					result.set(newEntry.name, newEntry);
 				}
 			}
+
 			return result;
 		}
 	} catch (e) {
 		console.log(`readDirectory error`, e);
 		// ignore
 	}
+
 	return result;
 }
 
@@ -144,12 +157,15 @@ export async function openEditors(themeSettingName: string) {
 	const doc = await workspace.openTextDocument(readmeURI);
 
 	const edit = new WorkspaceEdit();
+
 	edit.insert(
 		readmeURI,
 		new Position(0, 0),
 		`# ${themeSettingName}\n\nThis is the *${themeSettingName}* theme in **${getProductName()}**!\n\n---\n\n`,
 	);
+
 	await workspace.applyEdit(edit);
+
 	await doc.save();
 
 	await window.showTextDocument(doc);
@@ -157,7 +173,9 @@ export async function openEditors(themeSettingName: string) {
 	await window.showTextDocument(await workspace.openTextDocument(helloTs), {
 		viewColumn: ViewColumn.Two,
 	});
+
 	await commands.executeCommand("workbench.action.splitEditorDown");
+
 	await window.showTextDocument(
 		await workspace.openTextDocument(packageJSON),
 		{ viewColumn: ViewColumn.Two },
