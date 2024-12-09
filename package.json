@@ -22,6 +22,7 @@
 			}
 		]
 	},
+	"dependencies": {},
 	"description": "Test a color theme without installing it",
 	"devDependencies": {
 		"@types/node": "22.10.1",
